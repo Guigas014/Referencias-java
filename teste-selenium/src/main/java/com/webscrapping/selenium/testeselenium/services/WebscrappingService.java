@@ -1,18 +1,20 @@
-package com.webscrapping.selenium.testeselenium.services;
+  package com.webscrapping.selenium.testeselenium.services;
 
-import java.time.Duration;
-import java.util.List;
+  import java.time.Duration;
+  import java.util.ArrayList;
+  import java.util.Arrays;
+  import java.util.List;
 
-import com.google.gson.Gson;
+  import com.google.gson.Gson;
 
-//import com.webscrapping.selenium.testeselenium.libraries.WebDriverLibrary;
+  //import com.webscrapping.selenium.testeselenium.libraries.WebDriverLibrary;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.Rectangle;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+  import org.openqa.selenium.By;
+  import org.openqa.selenium.Dimension;
+  import org.openqa.selenium.Point;
+  import org.openqa.selenium.Rectangle;
+  import org.openqa.selenium.WebElement;
+  import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.springframework.stereotype.Service;
 
@@ -87,28 +89,69 @@ public class WebscrappingService {
       //Testando como fazer no caso de um Array
       List<WebElement> list = firefoxDriver.findElements(By.className("ca"));
 
-      WebElement value = list.get(1);
-      String texto = value.getText();
-      //System.out.println("\n" + texto + "\n");  //Mostra todo o objeto.
+      //WebElement value = list.get(1);
+      //String texto = value.getText();
+      //System.out.println("\n" + value + "\n");  //Mostra todo o objeto.
 
       //Transforma uma string em um Array de string e mostra como json.
-      String[] items = texto.split("\n");     
-      Gson gson = new Gson();
-      String json = gson.toJson(items);
-      System.out.println("\n" + json + "\n");
+      //String[] items = texto.split("\n");     
+      //String[] vagasSalario = items[3].split("até");    
+      //Gson gson = new Gson();
+      //String json = gson.toJson(items);
+      //System.out.println("\n" + json + "\n");
 
       //Pega o tamanho do array.
       Integer length = list.size();
-      System.out.println("\n" + length + "\n");
       
-      //List<String> items = null;
+      List<List<String>> concursos = new ArrayList<>();
 
-      //for (int i = 0; i < length; i++) {
-        //WebElement item = list.get(0);
-        //items.add(i, item.getText());
-      //}
+      for (int i = 0; i < length; i++) {
+        WebElement value = list.get(i);
+        String item = value.getText();
 
-      //System.out.println("\n" + items + "\n");
+        //System.out.println("\n" + item + "\n");
+        //String item = list.get(i).getText();
+
+        if (item.contains("DF")) {
+          String[] itemsConcurso = item.split("\n");
+          String[] vagasSalario = itemsConcurso[2].split(" até ");
+
+
+          List<String> concurso = new ArrayList<>();
+
+          concurso.add(itemsConcurso[0]); 
+          concurso.add(vagasSalario[0]); 
+          
+          if (vagasSalario.length > 1) {
+            concurso.add(vagasSalario[1]); 
+          }
+
+          concurso.add(itemsConcurso[3]); 
+          concurso.add(itemsConcurso[4]); 
+          concurso.add(itemsConcurso[5]); 
+
+          if (itemsConcurso.length > 6) {
+            concurso.add(itemsConcurso[6]); 
+          }
+
+          //System.out.println("\n" + concurso + "\n");
+          concursos.add(concurso); 
+        }
+      }
+
+
+      Integer newLength = concursos.size();
+      System.out.println("\n" + newLength + "\n");
+
+      System.out.println("\n" + concursos.get(2).get(0) + "\n");
+      System.out.println("\n" + concursos + "\n");
+
+
+      //String[] concurso = items.get(1).split("\n"); 
+      //String[] vagasSalario = concurso[3].split(" até ");    
+      //System.out.println("\n" + concurso[0] + "\n");
+      //System.out.println("\n" + vagasSalario[0] + "\n");
+      //System.out.println("\n" + vagasSalario[1] + "\n");
       
 
       //Fecha o navegador.
