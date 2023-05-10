@@ -1,5 +1,6 @@
 package com.webscrapping.selenium.testeselenium.controllers;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,8 +38,8 @@ public class WebscrappingController {
 
 
     @GetMapping("lista")
-    public void GetList() {
-      webscrapping.GetList();
+    public List GetList() {
+      return webscrapping.GetList();
     }
   
 }

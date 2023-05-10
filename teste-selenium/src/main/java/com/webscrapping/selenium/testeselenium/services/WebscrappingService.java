@@ -70,7 +70,7 @@ public class WebscrappingService {
     } 
 
 
-    public void GetList() {
+    public List<List<String>> GetList() {
 
       //Abre o navegador
       FirefoxOptions options = new FirefoxOptions()
@@ -156,6 +156,8 @@ public class WebscrappingService {
 
       //Fecha o navegador.
       firefoxDriver.quit();
+
+      return concursos;
     }
 }
 
