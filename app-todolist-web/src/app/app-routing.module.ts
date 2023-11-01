@@ -6,7 +6,7 @@ import { TaskComponent } from './task/task.component';
 import { UserComponent } from './user/user.component';
 
 const routes: Routes = [
-  // { path: '', redirectTo: '/user', pathMatch: 'full' },
+  { path: '', redirectTo: '/user', pathMatch: 'full' },
   { path: 'user', component: UserComponent },
   { path: 'task', component: TaskComponent },
 ];
