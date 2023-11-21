@@ -6,6 +6,9 @@
 
   width: 100vw;
   height: 100vh;
+
+  background-color: var(--carolina-blue);
+  color: var(--hunyadi-yellow);
 }
 
 main {
@@ -19,9 +22,9 @@ main {
   width: 40%;
   height: 50%;
 
-  background-color: dimgray;
+  background-color: var(--lapis-lazuli);
   border-radius: 6px;
-  box-shadow: 2px 2px 2px #00000099;
+  box-shadow: 2px 2px 2px var(--charcoal);
 }
 
 h2 {
@@ -39,6 +42,7 @@ form {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  position: relative;
 
   width: 100%;
 
@@ -58,21 +62,44 @@ label {
   padding: 1px;
   padding-left: 6px;
 
-  background-color: #757575;
+  background-color: #ffffff;
   outline: none;
   font-size: 13px;
   letter-spacing: 1px;
+  color: var(--charcoal);
 
-  border: solid 2px #565656bd;
+  border: none;
   border-radius: 3px;
+}
+
+.form-error {
+  position: absolute;
+  width: 100%;
+  height: 26px;
+  margin-left: 7px;
+  margin-top: 48px;
+  padding-top: 10px;
+
+  background-color: #ff000080;
+  font-size: 13px;
+  letter-spacing: 1px;
+
+  border-bottom: solid 2px var(--orange-pantone);
+  border-radius: 0px 0px 3px 3px;
+  z-index: 1;
 }
 
 button {
   width: 35%;
-  height: 30%;
+  height: 50px;
   margin-top: 1rem;
 
   font-weight: 700;
+  color: var(--hunyadi-yellow);
+
+  background-color: var(--charcoal);
+  border: none;
+  border-radius: 4px;
 
   cursor: pointer;
 }

@@ -5,21 +5,39 @@
             <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm">
                   <div class="form-group">
                         <label for="username">Usuário</label>
-                        <input type="text" class="form-control" required id="username" name="username" ngModel />
-                        <!-- <input type="text" class="form-control" required id="username" name="username"
-                              [(ngModel)]="user.username" /> -->
+                        <input type="text" class="form-control" required id="username" name="username"
+                              [(ngModel)]="user.username" #username="ngModel" />
+                        <!-- Tratamento de erro -->
+                        <div class="form-error" [hidden]="username.valid || username.pristine">
+                              Nome de usuário necessário!
+                        </div>
+
+                        <!-- <swal #testeSwal [swalVisible]="username.invalid == true && username.dirty == true"
+                              title="Usuário não preenchido!" text="">
+                        </swal> -->
                   </div>
+
 
                   <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="password" class="form-control" required id="password" name="password" ngModel />
-                        <!-- <input type="text" class="form-control" required id="password" name="password"
-                              [(ngModel)]="user.password" /> -->
+                        <input type="password" class="form-control" required id="password" name="password"
+                              [(ngModel)]="user.password" #password="ngModel" />
+                        <!-- Tratamento de erro -->
+                        <div class="form-error" [hidden]="password.valid || password.pristine">
+                              Uma senha é necessário!
+                        </div>
+
                   </div>
 
                   <button type="submit">ENTRAR</button>
             </form>
       </main>
 
+
       <!-- <a routerLink="/task">Tasks</a> -->
 </div>
+
+<!-- Main alert -->
+<swal #mainSwal title="" text="" icon="error" iconColor="#f26419ff" background="#e2e2e2" [timer]="2000"
+      [timerProgressBar]="true" [showConfirmButton]="false">
+</swal>
