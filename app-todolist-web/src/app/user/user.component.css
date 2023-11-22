@@ -97,7 +97,7 @@ button {
   font-weight: 700;
   color: var(--hunyadi-yellow);
 
-  background-color: var(--charcoal);
+  background-color: var(--charcoal, 10%);
   border: none;
   border-radius: 4px;
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Task } from './task';
-import { Observable, catchError } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +24,9 @@ export class TaskService {
 
     const newTask = this.http.post<Task>(this.url, task, this.httpOptions).pipe(
       catchError((error: any): Observable<any> => {
-        const e = error.error;
+        const e = error.error.message;
         console.log(e);
-        return e;
+        return of(e as string);
       })
     );
 

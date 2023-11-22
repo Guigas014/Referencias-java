@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, tap } from 'rxjs';
+import { Observable, catchError, of, tap } from 'rxjs';
 import { User } from './user';
 
 @Injectable({
@@ -19,18 +19,16 @@ export class UserService {
   url = 'http://localhost:8080/users/';
 
   // Cria um usuário
-  addUser(user: User): Observable<User | string> {
+  addUser(user: User): Observable<User> {
     // console.log(user);
 
-    const newUser = this.http
-      .post<User | string>(this.url, user, this.httpOptions)
-      .pipe(
-        catchError((error: any): Observable<any> => {
-          const e = error.error;
-          // console.log(e);
-          return e;
-        })
-      );
+    const newUser = this.http.post<User>(this.url, user, this.httpOptions).pipe(
+      catchError((error: any): Observable<any> => {
+        const e = error.error.message;
+        // console.log(e);
+        return of(e as string);
+      })
+    );
 
     return newUser;
   }

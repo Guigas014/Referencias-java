@@ -9,6 +9,9 @@ const routes: Routes = [
   { path: '', redirectTo: '/user', pathMatch: 'full' },
   { path: 'user', component: UserComponent },
   { path: 'task', component: TaskComponent },
+  // { path: '**', component: PageNotFoundComponent },
+  // { path: 'user', component: UserComponent, outlet: 'userRoute' },
+  // { path: 'task', component: TaskComponent, outlet: 'taskRoute' },
 ];
 
 @NgModule({
