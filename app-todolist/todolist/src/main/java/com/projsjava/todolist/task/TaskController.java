@@ -28,7 +28,7 @@ public class TaskController {
 
       @PostMapping("/")
       public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request) {
-            // System.out.println("Chegou no controller" + request.getAttribute("idUser"));
+            System.out.println("\nChegou no controller" + request.getAttribute("idUser"));
 
             var idUser = request.getAttribute("idUser");
             taskModel.setIdUser((UUID) idUser);

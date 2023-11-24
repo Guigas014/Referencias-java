@@ -88,10 +88,10 @@ export class UserComponent implements OnInit {
     });
   }
 
-  userLogin(existUser: User) {
+  userLogin(signUser: User) {
     //manda as credenciais para o localstorage;
-    this.sessionStorageService.set('username', existUser.username);
-    this.sessionStorageService.set('password', existUser.password);
+    this.sessionStorageService.set('username', signUser.username);
+    this.sessionStorageService.set('password', signUser.password);
   }
 
   userLogout() {

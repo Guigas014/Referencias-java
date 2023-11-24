@@ -45,6 +45,7 @@ public class FilterTaskAuth extends OncePerRequestFilter {
 
                   // Validar usuário
                   var user = this.userRepository.findByUsername(username);
+                  System.out.println(user);
 
                   if (user == null) {
                         response.sendError(401);
