@@ -19,6 +19,7 @@ export class TaskService {
 
   url = 'http://localhost:8080/tasks/';
 
+  //inseri um task no banco de dados
   addTask(task: Task, token: string): Observable<Task> {
     console.log('chegou aqui!');
 

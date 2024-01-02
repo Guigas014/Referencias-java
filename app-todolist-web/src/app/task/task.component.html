@@ -1,1 +1,118 @@
-<p>task works!</p>
+<div class="container">
+      <header>
+            <a href="" (click)="userLogout()">Logout</a>
+      </header>
+      <main>
+            <div class="header">
+                  <h2>Bem vindo as suas tarefas, {{ name || "Amigo" }}</h2>
+                  <button type="button" (click)="openNewTask = true" class="ph ph-file-plus"
+                        style="color: #f6ae2dff; font-size: 25px;"></button>
+                  <button type="button" (click)="openSetting = true" class="ph-fill ph ph-gear"
+                        style="color: #f6ae2dff; font-size: 25px">
+
+                  </button>
+            </div>
+            <form class="config" [hidden]="!openSetting">
+                  <input type="text" id="name" name="name" placeholder="Digite seu nome" [(ngModel)]="name" #newname />
+                  <!-- Tratamento de erro -->
+                  <!-- <div class="form-error" [hidden]="username.valid || usernamepristine">
+                                          Nome de usuário necessário!
+                                    </div> -->
+                  <button type="submit" (click)="onSubmit()">Salvar</button>
+            </form>
+            <form class="create" [hidden]="!openNewTask">
+                  <label for="title">Título</label>
+                  <input type="text" name="title" id="title" />
+                  <!-- Tratamento de erro -->
+                  <!-- <div class="form-error" [hidden]="username.valid || usernamepristine">
+                              Nome de usuário necessário!
+                  </div> -->
+
+                  <label for="description">Descrição</label>
+                  <input type="text" name="description" id="description" />
+                  <!-- Tratamento de erro -->
+                  <!-- <div class="form-error" [hidden]="username.valid ||usernamepristine">
+                                                      Nome de usuário necessário!
+                                                </div> -->
+                  <label for="start">Data de início</label>
+                  <input type="date" name="start" id="start" />
+                  <!-- Tratamento de erro -->
+                  <!-- <div class="form-error" [hidden]="username.valid || usernamepristine">
+                                                      Nome de usuário necessário!
+                                                </div> -->
+                  <label for="end">Data de término</label>
+                  <input type="date" name="end" id="end" />
+                  <!-- Tratamento de erro -->
+                  <!-- <div class="form-error" [hidden]="username.valid || usernamepristine">
+                                                      Nome de usuário necessário!
+                                                </div> -->
+                  <label for="priority">Prioridade</label>
+                  <select name="priority" id="priority">
+                        <option *ngFor="let priority of priorities" [value]="priority">{{ priority }}</option>
+                  </select>
+                  <!-- Tratamento de erro -->
+                  <!-- <div class="form-error" [hidden]="username.valid || usernamepristine">
+                                                      Nome de usuário necessário!
+                                                                        </div> -->
+
+                  <button type="submit" (click)="createTask()">Criar</button>
+            </form>
+
+            <ul class="tasksList">
+                  <li class="task">
+                        <input type="checkbox" />
+                        <span class="title">Fazer compras</span>
+                        <button type="button" class="ph-thin ph-pencil-simple"
+                              style="font-size: 18px; color: #f6ae2dff;"></button>
+                        <button type="button" class="ph-thin ph-x-circle"
+                              style="font-size: 18px; color: #f6ae2dff;"></button>
+                  </li>
+                  <li class="task">
+                        <input type="checkbox" />
+                        <span class="title">Fazer compras</span>
+                        <button type="button">Editar</button>
+                        <button type="button">X</button>
+                  </li>
+                  <li class="task">
+                        <input type="checkbox" />
+                        <span class="title">Fazer compras</span>
+                        <button type="button">Editar</button>
+                        <button type="button">X</button>
+                  </li>
+                  <li class="task">
+                        <input type="checkbox" />
+                        <span class="title">Fazer lista de compras</span>
+                        <button type="button">Editar</button>
+                        <button type="button">X</button>
+                  </li>
+                  <li class="task">
+                        <input type="checkbox" />
+                        <span class="title">Fazer lista de compras</span>
+                        <button type="button">Editar</button>
+                        <button type="button">X</button>
+                  </li>
+                  <li class="task">
+                        <input type="checkbox" />
+                        <span class="title">Fazer lista de compras</span>
+                        <button type="button">Editar</button>
+                        <button type="button">X</button>
+                  </li>
+                  <li class="task">
+                        <input type="checkbox" (click)="makeTask()" />
+                        <span class="title">Fazer lista de compras do mes de fevereiro a partir do dia 25 de
+                              janeiro</span>
+                        <button type="button">Editar</button>
+                        <button type="button">X</button>
+                  </li>
+
+
+            </ul>
+            <button type="button" class="topButton ph-thin ph-arrow-up"
+                  style="font-size: 20px; color: #f6ae2dff"></button>
+      </main>
+</div>
+
+<!-- Main alert -->
+<!-- <swal #mainSwal title="" text="" icon="error" iconColor="#f26419ff" background="#e2e2e2" [timer]="3000"
+      [timerProgressBar]="true" [showConfirmButton]="false">
+</swal> -->

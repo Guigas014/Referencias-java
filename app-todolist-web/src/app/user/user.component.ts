@@ -94,11 +94,6 @@ export class UserComponent implements OnInit {
     this.sessionStorageService.set('password', signUser.password);
   }
 
-  userLogout() {
-    //apaga as credenciais para o localstorage;
-    this.sessionStorageService.clear();
-  }
-
   ngOnInit() {
     // this.userService.addUser(this.user).subscribe((res) => console.log(res));
   }
