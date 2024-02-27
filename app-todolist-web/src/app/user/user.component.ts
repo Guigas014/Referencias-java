@@ -35,8 +35,8 @@ export class UserComponent implements OnInit {
   public readonly mainSwal!: SwalComponent;
 
   onSubmit(newUser: NgForm) {
-    this.user.username = newUser.value.username;
-    this.user.password = newUser.value.password;
+    // this.user.username = newUser.value.username;
+    // this.user.password = newUser.value.password;
     console.log('user: ' + this.user.username);
     console.log('passsword: ' + this.user.password);
 
@@ -59,8 +59,9 @@ export class UserComponent implements OnInit {
 
     // console.log('Continua!');
 
-    //Salva io usuário no banco de dados.
+    //Salva o usuário no banco de dados.
     this.userService.addUser(this.user).subscribe((res) => {
+      //Se o usuário foi inserido no DB.
       if (res.username == this.user.username) {
         this.mainSwal.title = 'Tudo certo!';
         this.mainSwal.text = `Usuário ${res.username} criado com sucesso!`;
@@ -72,7 +73,7 @@ export class UserComponent implements OnInit {
         //Faz o login salvando o usuário no localstorage do navegador.
         this.userLogin(this.user);
 
-        //Vai para a paágina de tasks
+        //Vai para a página de tasks
         this.router.navigate(['/task']);
 
         // console.log(res);

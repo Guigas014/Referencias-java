@@ -7,7 +7,7 @@
   width: 100vw;
   height: 100vh;
 
-  background-color: var(--carolina-blue);
+  /* background-color: var(--carolina-blue); */
   color: var(--hunyadi-yellow);
 }
 
@@ -20,7 +20,8 @@ main {
   gap: 1rem;
 
   width: 40%;
-  height: 50%;
+  /* height: 50%; */
+  padding: 3rem 0;
 
   background-color: var(--lapis-lazuli);
   border-radius: 6px;
@@ -42,7 +43,7 @@ form {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  position: relative;
+  /* position: relative; */
 
   width: 100%;
 
@@ -73,11 +74,10 @@ label {
 }
 
 .form-error {
-  position: absolute;
+  /* position: absolute; */
   width: 100%;
   height: 26px;
   margin-left: 7px;
-  margin-top: 48px;
   padding-top: 10px;
 
   background-color: #ff000080;
