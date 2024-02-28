@@ -82,39 +82,38 @@
                         </div>
 
                         <!-- <button type="submit">Criar</button> -->
-                        <button type="submit" (click)="createTask()">Criar</button>
+                        <button type="submit" (click)="createTask()">Salvar</button>
                   </form>
             </div>
 
-            <ul class="tasksList">
-                  <li class="task">
-                        <input type="checkbox" />
-                        <span class="title">Fazer compras</span>
-                        <button type="button" class="ph-thin ph-pencil-simple"
-                              style="font-size: 18px; color: #f6ae2dff;"></button>
-                        <button type="button" class="ph-thin ph-x-circle"
-                              style="font-size: 18px; color: #f6ae2dff;"></button>
-                  </li>
-                  <li class="task">
-                        <input type="checkbox" />
-                        <span class="title">Fazer lista de compras</span>
-                        <button type="button" class="ph-thin ph-pencil-simple"
-                              style="font-size: 18px; color: #f6ae2dff;"></button>
-                        <button type="button" class="ph-thin ph-x-circle"
-                              style="font-size: 18px; color: #f6ae2dff;"></button>
-                  </li>
-                  <li class="task">
-                        <input type="checkbox" (click)="makeTask()" />
-                        <span class="title">Fazer lista de compras do mes de fevereiro a partir do dia 25 de
-                              janeiro</span>
-                        <button type="button" class="ph-thin ph-pencil-simple"
-                              style="font-size: 18px; color: #f6ae2dff;"></button>
-                        <button type="button" class="ph-thin ph-x-circle"
-                              style="font-size: 18px; color: #f6ae2dff;"></button>
-                  </li>
+            <h2>Lista de tarefas</h2>
+            <div *ngIf="tasks.length > 0; else helpText">
+                  <ul class="tasksList">
+                        <li class="task" *ngFor="let task of tasks">
+                              <input type="checkbox" (click)="makeTask()" />
+                              <div class="task-content">
+                                    <div class="head-task">
+                                          <span class="title">{{ task.title }}</span>
+                                          <span class="priority">{{ task.priority }}</span>
+                                    </div>
+                                    <span class="description">{{ task.description }}</span>
+                              </div>
 
+                              <button type="button" class="ph-thin ph-pencil-simple"
+                                    style="font-size: 18px; color: #f6ae2dff;"></button>
+                              <button type="button" class="ph-thin ph-x-circle"
+                                    style="font-size: 18px; color: #f6ae2dff;"></button>
+                        </li>
 
-            </ul>
+                  </ul>
+
+            </div>
+            <ng-template #helpText>
+                  <h4>
+                        A lista de tarefas está vazia
+                  </h4>
+            </ng-template>
+
 
             <button type="button" class="topButton ph-thin ph-arrow-up" style="font-size: 20px; color: #2f4858ff"
                   (click)="top()"></button>

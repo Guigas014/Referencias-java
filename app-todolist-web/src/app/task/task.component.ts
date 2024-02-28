@@ -28,6 +28,7 @@ import { formatDate } from '@angular/common';
 export class TaskComponent implements OnInit {
   priorities = ['ALTA', 'MÉDIA', 'BAIXA'];
 
+  tasks: Task[] = [];
   task: Task = {
     description: '',
     title: '',
@@ -61,13 +62,17 @@ export class TaskComponent implements OnInit {
     this.openSetting();
   }
 
-  createTask() {
+  getToken() {
     //Busca o usuário no localstorage e cria o token: 'Guigas014:123456'
     const signUsername = this.sessionStorageService.get('username');
     const signPassword = this.sessionStorageService.get('password');
     this.name = signUsername || '';
     // this.token = signUsername + ':' + signPassword;
     this.token = `${signUsername}:${signPassword}`;
+  }
+
+  createTask() {
+    this.getToken();
 
     //Trata os dados vindos do formulário.
     if (this.task.title == '') {
@@ -139,6 +144,9 @@ export class TaskComponent implements OnInit {
 
         //Fecha o formulário de inserir.
         this.openNewTask();
+
+        //Atualiza a lista de tarefas
+        this.getTasks();
       } else {
         this.taskSwal.title = 'Algo errado!';
         this.taskSwal.text = res.toString();
@@ -146,6 +154,18 @@ export class TaskComponent implements OnInit {
         this.taskSwal.iconColor = '#f26419ff';
 
         this.taskSwal.fire();
+      }
+    });
+  }
+
+  getTasks() {
+    this.getToken();
+
+    this.taskService.getTasks(this.token).subscribe((res) => {
+      this.tasks = res;
+      // console.log(this.tasks);
+      if (this.tasks.length == 0) {
+        alert('Não existe nenhuma tarefa cadastrada!');
       }
     });
   }
@@ -189,14 +209,6 @@ export class TaskComponent implements OnInit {
     }
   }
 
-  constructor(
-    private taskService: TaskService,
-    @Self() private sessionStorageService: StorageService,
-    @SkipSelf() private localStorageService: StorageService,
-    private router: Router,
-    @Inject(LOCALE_ID) public locale: string
-  ) {}
-
   userLogout() {
     //apaga as credenciais do localstorage;
     this.sessionStorageService.clear();
@@ -205,5 +217,15 @@ export class TaskComponent implements OnInit {
     this.router.navigate(['/user']);
   }
 
-  ngOnInit() {}
+  constructor(
+    private taskService: TaskService,
+    @Self() private sessionStorageService: StorageService,
+    @SkipSelf() private localStorageService: StorageService,
+    private router: Router,
+    @Inject(LOCALE_ID) public locale: string
+  ) {}
+
+  ngOnInit() {
+    this.getTasks();
+  }
 }

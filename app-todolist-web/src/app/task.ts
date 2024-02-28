@@ -6,5 +6,6 @@ export interface Task {
   endAt: string;
   priority: string;
   createdAt?: Date;
+  status?: string;
   idUser?: string;
 }

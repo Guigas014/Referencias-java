@@ -17,6 +17,13 @@ export class TaskService {
     }),
   };
 
+  updateAuthorization(token: string) {
+    this.httpOptions.headers = this.httpOptions.headers.set(
+      'Authorization',
+      `Basic ${btoa(token)}`
+    );
+  }
+
   url = 'http://localhost:8080/tasks/';
 
   //inseri um task no banco de dados
@@ -24,10 +31,8 @@ export class TaskService {
     console.log('chegou aqui!');
 
     //Atualiza o Authorization do header.
-    this.httpOptions.headers = this.httpOptions.headers.set(
-      'Authorization',
-      `Basic ${btoa(token)}`
-    );
+    this.updateAuthorization(token);
+
     // console.log(this.httpOptions.headers.getAll('Authorization'));
 
     const newTask = this.http.post<Task>(this.url, task, this.httpOptions).pipe(
@@ -39,5 +44,21 @@ export class TaskService {
     );
 
     return newTask;
+  }
+
+  getTasks(token: string): Observable<Task[]> {
+    //Atualiza o Authorization do header.
+    this.updateAuthorization(token);
+
+    const tasks = this.http.get<Task[]>(this.url, this.httpOptions).pipe(
+      catchError((error: any): Observable<any> => {
+        const e = error.error;
+        console.log(e);
+        return of(e as string);
+      })
+    );
+
+    console.log(tasks);
+    return tasks;
   }
 }
