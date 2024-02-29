@@ -7,7 +7,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projsjava.todolist.user.UserException;
+import com.projsjava.todolist.user.UserModel;
+import com.projsjava.todolist.user.UserRepository;
 import com.projsjava.todolist.utils.Utils;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +30,9 @@ public class TaskController {
 
       @Autowired
       private TaskRepository taskRepository;
+
+      @Autowired
+      private UserRepository userRepository;
 
       @PostMapping("/")
       public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request) {
@@ -85,4 +93,73 @@ public class TaskController {
             // taskModel.setId(id);
             return ResponseEntity.ok().body(taskUpdated);
       }
+
+      @DeleteMapping("/{id}")
+      public ResponseEntity delete(@PathVariable UUID id, HttpServletRequest request) {
+            var task = this.taskRepository.findById(id).orElse(null);
+
+            if (task == null) {
+                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                              .body("Tarefa não encontrada!");
+            }
+
+            var idUser = request.getAttribute("idUser");
+
+            if (!task.getIdUser().equals(idUser)) {
+                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                              .body("Usuário sem permissão para alterar a tarefa.");
+            }
+
+            this.taskRepository.deleteById(id);
+
+            return ResponseEntity.ok().body("Tarefa excluida com sucesso!");
+      }
+
+      @PatchMapping("/status/{id}")
+      public ResponseEntity updateStatus(@RequestBody TaskModel taskModel,
+                  HttpServletRequest request, @PathVariable UUID id) {
+
+            var task = this.taskRepository.findById(id).orElse(null);
+
+            if (task == null) {
+                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                              .body("Tarefa não encontrada!");
+            }
+
+            var idUser = request.getAttribute("idUser");
+
+            if (!task.getIdUser().equals(idUser)) {
+                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                              .body("Usuário sem permissão para alterar a tarefa.");
+            }
+
+            if (task.getStatus() == TaskStatus.DONE) {
+                  task.setStatus(TaskStatus.PENDING);
+            } else {
+                  task.setStatus(TaskStatus.DONE);
+            }
+
+            Utils.copyNonNullProperties(taskModel, task);
+            var taskUpdated = this.taskRepository.save(task);
+
+            return ResponseEntity.ok().body(taskUpdated);
+      }
+
+      @PatchMapping("/user/name")
+      public ResponseEntity saveName(@RequestBody String name, HttpServletRequest request) {
+            var idUser = request.getAttribute("idUser");
+
+            var user = this.userRepository.findById((UUID) idUser).orElse(null);
+
+            if (user == null) {
+                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                              .body("Usuário não exsite.");
+            }
+
+            user.setName(name);
+            this.userRepository.save(user);
+
+            return ResponseEntity.ok().body("Nome de usuário atualizado");
+      }
+
 }

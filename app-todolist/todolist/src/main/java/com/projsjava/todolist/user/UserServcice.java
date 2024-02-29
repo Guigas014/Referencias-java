@@ -15,7 +15,7 @@ public class UserServcice {
       private UserRepository userRepository;
 
       @Transactional
-      public UserDTO saveUser(UserModel userModel) {
+      public UserModel saveUser(UserModel userModel) {
             var user = this.userRepository.findByUsername(userModel.getUsername());
 
             // if (user != null) {
@@ -37,9 +37,19 @@ public class UserServcice {
 
             userRepository.save(userModel);
 
-            UserDTO userDTO = new UserDTO(userModel);
+            // UserDTO userDTO = new UserDTO(userModel);
 
-            return userDTO;
+            return userModel;
+      }
+
+      public UserModel login(UserModel userModel) {
+            var user = this.userRepository.findByUsername(userModel.getUsername());
+
+            if (user == null) {
+                  throw new UserException("Usuário ou senha estão incorretos!");
+            }
+
+            return user;
       }
 
 }
