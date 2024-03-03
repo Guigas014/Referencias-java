@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projsjava.todolist.user.UserException;
-import com.projsjava.todolist.user.UserModel;
 import com.projsjava.todolist.user.UserRepository;
 import com.projsjava.todolist.utils.Utils;
 
@@ -112,13 +110,11 @@ public class TaskController {
 
             this.taskRepository.deleteById(id);
 
-            return ResponseEntity.ok().body("Tarefa excluida com sucesso!");
+            return ResponseEntity.ok().build();
       }
 
-      @PatchMapping("/status/{id}")
-      public ResponseEntity updateStatus(@RequestBody TaskModel taskModel,
-                  HttpServletRequest request, @PathVariable UUID id) {
-
+      @PutMapping("/status/{id}")
+      public ResponseEntity updateStatus(@PathVariable UUID id, HttpServletRequest request) {
             var task = this.taskRepository.findById(id).orElse(null);
 
             if (task == null) {
@@ -139,7 +135,7 @@ public class TaskController {
                   task.setStatus(TaskStatus.DONE);
             }
 
-            Utils.copyNonNullProperties(taskModel, task);
+            // Utils.copyNonNullProperties(taskModel, task);
             var taskUpdated = this.taskRepository.save(task);
 
             return ResponseEntity.ok().body(taskUpdated);
@@ -151,15 +147,15 @@ public class TaskController {
 
             var user = this.userRepository.findById((UUID) idUser).orElse(null);
 
-            if (user == null) {
-                  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                              .body("Usuário não exsite.");
-            }
+            // if (user == null) {
+            //       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            //                   .body("Usuário não exsite.");
+            // }
 
             user.setName(name);
             this.userRepository.save(user);
 
-            return ResponseEntity.ok().body("Nome de usuário atualizado");
+            return ResponseEntity.ok().body(user);
       }
 
 }

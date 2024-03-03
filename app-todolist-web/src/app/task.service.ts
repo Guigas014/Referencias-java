@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, of, take } from 'rxjs';
 
 import { Task } from './task';
+import { User } from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -17,14 +18,14 @@ export class TaskService {
     }),
   };
 
+  url = 'http://localhost:8080/tasks/';
+
   updateAuthorization(token: string) {
     this.httpOptions.headers = this.httpOptions.headers.set(
       'Authorization',
       `Basic ${btoa(token)}`
     );
   }
-
-  url = 'http://localhost:8080/tasks/';
 
   //inseri um task no banco de dados
   addTask(task: Task, token: string): Observable<Task> {
@@ -46,6 +47,23 @@ export class TaskService {
     return newTask;
   }
 
+  updateTask(task: Task, token: string, id: number): Observable<Task> {
+    //Atualiza o Authorization do header.
+    this.updateAuthorization(token);
+
+    const updatedTask = this.http
+      .put<Task>(this.url + id, task, this.httpOptions)
+      .pipe(
+        catchError((error: any): Observable<any> => {
+          const e = error.error;
+          console.log(e);
+          return of(e as string);
+        })
+      );
+
+    return updatedTask;
+  }
+
   getTasks(token: string): Observable<Task[]> {
     //Atualiza o Authorization do header.
     this.updateAuthorization(token);
@@ -58,7 +76,61 @@ export class TaskService {
       })
     );
 
-    console.log(tasks);
+    // console.log(tasks);
     return tasks;
+  }
+
+  deleteTask(id: any, token: string): Observable<null> {
+    //Atualiza o Authorization do header.
+    this.updateAuthorization(token);
+    // console.log(this.httpOptions);
+
+    const message = this.http
+      .delete<null>(this.url + id, this.httpOptions)
+      .pipe(
+        catchError((error: any): Observable<any> => {
+          const e = error.error;
+          console.log(e);
+          return of(e as string);
+        })
+      );
+
+    // console.log(message);
+    return message;
+  }
+
+  updateStatus(id: any, token: string): Observable<Task> {
+    //Atualiza o Authorization do header.
+    this.updateAuthorization(token);
+    // console.log(this.httpOptions);
+
+    const task = this.http
+      .put<Task>(`${this.url}status/${id}`, '', this.httpOptions)
+      .pipe(
+        catchError((error: any): Observable<any> => {
+          const e = error.error;
+          console.log(e);
+
+          return of(e as string);
+        })
+      );
+    return task;
+  }
+
+  updateName(name: string, token: string): Observable<User> {
+    //Atualiza o Authorization do header.
+    this.updateAuthorization(token);
+
+    const userUpdate = this.http
+      .patch<User>(`${this.url}user/name`, name, this.httpOptions)
+      .pipe(
+        catchError((error: any): Observable<any> => {
+          const e = error.error;
+          console.log(e);
+          return of(e as string);
+        })
+      );
+
+    return userUpdate;
   }
 }

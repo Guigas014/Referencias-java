@@ -35,6 +35,7 @@ public class UserServcice {
             userModel.setPassword(passwordHashed);
             userModel.setCreatedAt(LocalDateTime.now());
 
+
             userRepository.save(userModel);
 
             // UserDTO userDTO = new UserDTO(userModel);

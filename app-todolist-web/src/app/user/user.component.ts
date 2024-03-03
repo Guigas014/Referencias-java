@@ -70,13 +70,16 @@ export class UserComponent implements OnInit {
 
         this.mainSwal.fire();
 
+        //REsolver oproblema do password. Isso não vai resolver o problema.
+        // const password = res.password.replace('.', '');
+        // console.log(atob(res.password));
+        // console.log(this.user);
+
         //Faz o login salvando o usuário no localstorage do navegador.
         this.userLogin(this.user);
 
         //Vai para a página de tasks
         this.router.navigate(['/task']);
-
-        // console.log(res);
       } else {
         this.mainSwal.title = 'Algo errado!';
         this.mainSwal.text = res.toString();
@@ -84,7 +87,7 @@ export class UserComponent implements OnInit {
         this.mainSwal.iconColor = '#f26419ff';
 
         this.mainSwal.fire();
-        // console.log(res);
+        console.log(res);
       }
     });
   }
@@ -92,7 +95,12 @@ export class UserComponent implements OnInit {
   userLogin(signUser: User) {
     //manda as credenciais para o localstorage;
     this.sessionStorageService.set('username', signUser.username);
+    // this.sessionStorageService.set('password', signUser.password);
     this.sessionStorageService.set('password', signUser.password);
+    this.sessionStorageService.set(
+      'name',
+      signUser.name != null ? signUser.name : ''
+    );
   }
 
   ngOnInit() {

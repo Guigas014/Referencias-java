@@ -23,7 +23,7 @@
                         <!-- <div class="form-error" [hidden]="username.valid || usernamepristine">
                                                 Nome de usuário necessário!
                                           </div> -->
-                        <button type="submit" (click)="onSubmit()">Salvar</button>
+                        <button type="submit" (click)="onSubmit(name)">Salvar</button>
                   </form>
             </div>
             <div [hidden]="newTask == false">
@@ -43,7 +43,7 @@
                               <input type="text" name="description" id="description" required
                                     [(ngModel)]="task.description" #description="ngModel" />
                               <!-- Tratamento de erro -->
-                              <div class="form-error" [hidden]="description.valid ||description.pristine">
+                              <div class="form-error" [hidden]="description.valid || description.pristine">
                                     Uma descrição é necessária!
                               </div>
                         </div>
@@ -82,7 +82,7 @@
                         </div>
 
                         <!-- <button type="submit">Criar</button> -->
-                        <button type="submit" (click)="createTask()">Salvar</button>
+                        <button type="submit" (click)="createOrUpdateTask()">Salvar</button>
                   </form>
             </div>
 
@@ -90,7 +90,8 @@
             <div *ngIf="tasks.length > 0; else helpText">
                   <ul class="tasksList">
                         <li class="task" *ngFor="let task of tasks">
-                              <input type="checkbox" (click)="makeTask()" />
+                              <input type="checkbox" (change)="updateStatus(task.id)"
+                                    [checked]="task.status == 'DONE'" />
                               <div class="task-content">
                                     <div class="head-task">
                                           <span class="title">{{ task.title }}</span>
@@ -100,8 +101,8 @@
                               </div>
 
                               <button type="button" class="ph-thin ph-pencil-simple"
-                                    style="font-size: 18px; color: #f6ae2dff;"></button>
-                              <button type="button" class="ph-thin ph-x-circle"
+                                    style="font-size: 18px; color: #f6ae2dff;" (click)="updateTask(task.id)"></button>
+                              <button type="button" class="ph-thin ph-x-circle" (click)="deleteTask(task.id)"
                                     style="font-size: 18px; color: #f6ae2dff;"></button>
                         </li>
 

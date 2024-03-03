@@ -8,13 +8,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BROWSER_STORAGE, StorageService } from '../storage.service';
+import { Location, formatDate } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 import { TaskService } from '../task.service';
 import { Task } from '../task';
-import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-task',
@@ -58,20 +58,28 @@ export class TaskComponent implements OnInit {
   @ViewChild('taskSwal')
   public readonly taskSwal!: SwalComponent;
 
-  onSubmit() {
-    this.openSetting();
-  }
-
   getToken() {
     //Busca o usuário no localstorage e cria o token: 'Guigas014:123456'
     const signUsername = this.sessionStorageService.get('username');
     const signPassword = this.sessionStorageService.get('password');
-    this.name = signUsername || '';
+    this.name = this.name || '';
     // this.token = signUsername + ':' + signPassword;
     this.token = `${signUsername}:${signPassword}`;
   }
 
-  createTask() {
+  onSubmit(name: string) {
+    this.getToken();
+
+    this.taskService.updateName(name, this.token).subscribe((res) => {
+      console.log(res.name);
+    });
+
+    this.localStorageService.set('name', name);
+
+    this.openSetting();
+  }
+
+  createOrUpdateTask() {
     this.getToken();
 
     //Trata os dados vindos do formulário.
@@ -129,6 +137,41 @@ export class TaskComponent implements OnInit {
       );
     }
 
+    if (this.task.id) {
+      //Chama o backend para atualizar os dados
+      this.taskService
+        .updateTask(this.task, this.token, this.task.id)
+        .subscribe((res) => {
+          if (res.id == this.task.id) {
+            // console.log(res);
+            //Alerta de sucesso
+            this.taskSwal.title = 'Tudo certo!';
+            this.taskSwal.text = 'Tarefa atualizada com sucesso!';
+            this.taskSwal.icon = 'success';
+            this.taskSwal.iconColor = 'green';
+
+            this.taskSwal.fire();
+
+            //Fecha o formulário de inserir.
+            this.openNewTask();
+
+            this.clearTask();
+
+            //Atualiza a lista de tarefas
+            this.getTasks();
+          } else {
+            this.taskSwal.title = 'Algo errado!';
+            this.taskSwal.text = res.toString();
+            this.taskSwal.icon = 'error';
+            this.taskSwal.iconColor = '#f26419ff';
+
+            this.taskSwal.fire();
+          }
+        });
+
+      return;
+    }
+
     //Chama o backend para salvar no DB
     this.taskService.addTask(this.task, this.token).subscribe((res) => {
       if (res.title == this.task.title) {
@@ -140,10 +183,10 @@ export class TaskComponent implements OnInit {
 
         this.taskSwal.fire();
 
-        this.clearTask();
-
         //Fecha o formulário de inserir.
         this.openNewTask();
+
+        this.clearTask();
 
         //Atualiza a lista de tarefas
         this.getTasks();
@@ -164,9 +207,59 @@ export class TaskComponent implements OnInit {
     this.taskService.getTasks(this.token).subscribe((res) => {
       this.tasks = res;
       // console.log(this.tasks);
-      if (this.tasks.length == 0) {
-        alert('Não existe nenhuma tarefa cadastrada!');
+      // if (this.tasks.length == 0) {
+      //   alert('Não existe nenhuma tarefa cadastrada!');
+      // }
+    });
+  }
+
+  updateTask(id: any) {
+    this.openNewTask();
+
+    this.tasks.map((task) => {
+      if (task.id == id) {
+        this.task.description = task.description;
+        this.task.title = task.title;
+        this.task.priority = task.priority;
+        this.task.startAt = task.startAt;
+        this.task.endAt = task.endAt;
+        this.task.id = task.id;
       }
+    });
+  }
+
+  deleteTask(id: any) {
+    this.getToken();
+
+    if (id == '') {
+      this.taskSwal.title = 'Dado inválido';
+      this.taskSwal.text = 'Id não existente';
+
+      this.taskSwal.fire();
+      return;
+    }
+
+    this.taskService.deleteTask(id, this.token).subscribe((res) => {
+      if (res == null) {
+        //Alerta de sucesso
+        this.taskSwal.title = 'Tudo certo!';
+        this.taskSwal.text = 'Tarefa excluída com sucesso!';
+        this.taskSwal.icon = 'success';
+        this.taskSwal.iconColor = 'green';
+
+        this.taskSwal.fire();
+
+        //Atualiza a lista de tarefas recarregando a página
+        this.getTasks();
+      } else {
+        this.taskSwal.title = 'Algo errado!';
+        this.taskSwal.text = res;
+        this.taskSwal.icon = 'error';
+        this.taskSwal.iconColor = '#f26419ff';
+
+        this.taskSwal.fire();
+      }
+      // console.log(res);
     });
   }
 
@@ -177,7 +270,7 @@ export class TaskComponent implements OnInit {
       this.locale
     );
 
-    console.log(today);
+    // console.log(today);
     // Limpa os campos do formulário
     this.task.description = '';
     this.task.title = '';
@@ -185,6 +278,7 @@ export class TaskComponent implements OnInit {
     this.task.startAt = today;
     this.task.endAt = today;
 
+    // Apaga a menssagem de erro de cada input.
     const errorMessage = document.getElementsByClassName('form-error');
     for (let i = 0; i < errorMessage.length; i++) {
       errorMessage[i].setAttribute('hidden', 'true');
@@ -199,14 +293,40 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  makeTask() {
-    if (this.taskStatus == true) {
-      console.log('tarefa concluída!!');
-      this.taskStatus = false;
-    } else if (this.taskStatus == false) {
-      console.log('tarefa pendente!!');
-      this.taskStatus = true;
-    }
+  updateStatus(id: any) {
+    this.getToken();
+
+    this.taskService.updateStatus(id, this.token).subscribe((res) => {
+      if (res.status != this.task.status) {
+        //Alerta de sucesso
+        this.taskSwal.title = 'Tudo certo!';
+        this.taskSwal.text = 'Status atualizado!';
+        this.taskSwal.icon = 'success';
+        this.taskSwal.iconColor = 'green';
+
+        this.taskSwal.fire();
+
+        //Atualiza a lista de tarefas recarregando a página
+        this.getTasks();
+      } else {
+        this.taskSwal.title = 'Algo errado!';
+        this.taskSwal.text = res.toString();
+        this.taskSwal.icon = 'error';
+        this.taskSwal.iconColor = '#f26419ff';
+
+        this.taskSwal.fire();
+
+        this.getTasks();
+      }
+    });
+
+    // if (this.taskStatus == true) {
+    //   console.log('tarefa concluída!!');
+    //   this.taskStatus = false;
+    // } else if (this.taskStatus == false) {
+    //   console.log('tarefa pendente!!');
+    //   this.taskStatus = true;
+    // }
   }
 
   userLogout() {
@@ -222,10 +342,13 @@ export class TaskComponent implements OnInit {
     @Self() private sessionStorageService: StorageService,
     @SkipSelf() private localStorageService: StorageService,
     private router: Router,
-    @Inject(LOCALE_ID) public locale: string
+    @Inject(LOCALE_ID) public locale: string,
+    private location: Location
   ) {}
 
   ngOnInit() {
+    this.name = this.sessionStorageService.get('name') || '';
     this.getTasks();
+    console.log('reload');
   }
 }
