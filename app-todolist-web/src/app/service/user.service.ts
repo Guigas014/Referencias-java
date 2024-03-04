@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, of, tap } from 'rxjs';
-import { User } from './user';
+import { Observable, catchError, of } from 'rxjs';
+import { User } from '../types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +31,18 @@ export class UserService {
     );
 
     return newUser;
+  }
+
+  //Busca o usuário para fazer o login
+  getUser(user: User): Observable<User> {
+    const userLoged = this.http.post<User>(`${this.url}login`, user).pipe(
+      catchError((error: any): Observable<any> => {
+        const e = error.error.message;
+        // console.log(e);
+        return of(e as string);
+      })
+    );
+
+    return userLoged;
   }
 }

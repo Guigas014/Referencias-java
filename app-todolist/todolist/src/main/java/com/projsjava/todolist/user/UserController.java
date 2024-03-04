@@ -1,5 +1,7 @@
 package com.projsjava.todolist.user;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-      // @Autowired
-      // private UserRepository userRepository;
+      @Autowired
+      private UserRepository userRepository;
 
       @Autowired
       private UserServcice userServcice;
@@ -28,7 +32,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
       }
 
-      @GetMapping("/login")
+      @PostMapping("/login")
       public ResponseEntity<UserDTO> login(@RequestBody UserModel userModel) {
 
             UserDTO userLoged = new UserDTO(this.userServcice.login(userModel));

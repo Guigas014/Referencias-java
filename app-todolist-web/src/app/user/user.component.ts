@@ -1,11 +1,12 @@
 import { Component, OnInit, Self, SkipSelf, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { BROWSER_STORAGE, StorageService } from '../service/storage.service';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
-import { User } from '../user';
-import { UserService } from '../user.service';
-import { BROWSER_STORAGE, StorageService } from '../storage.service';
-import { Router } from '@angular/router';
+import { User } from '../types/user';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'app-user',
@@ -23,6 +24,8 @@ export class UserComponent implements OnInit {
   };
   // user: User | undefined;
 
+  token: string = '';
+
   constructor(
     private userService: UserService,
     @Self() private sessionStorageService: StorageService,
@@ -35,10 +38,10 @@ export class UserComponent implements OnInit {
   public readonly mainSwal!: SwalComponent;
 
   onSubmit(newUser: NgForm) {
-    // this.user.username = newUser.value.username;
-    // this.user.password = newUser.value.password;
-    console.log('user: ' + this.user.username);
-    console.log('passsword: ' + this.user.password);
+    this.user.username = newUser.value.username;
+    this.user.password = newUser.value.password;
+    // console.log('user: ' + this.user.username);
+    // console.log('passsword: ' + this.user.password);
 
     //Trata os dados vindos do formulário.
     if (this.user.username == '' || this.user.password == '') {
@@ -57,29 +60,18 @@ export class UserComponent implements OnInit {
       return;
     }
 
-    // console.log('Continua!');
+    // console.log(this.user.password);
 
-    //Salva o usuário no banco de dados.
-    this.userService.addUser(this.user).subscribe((res) => {
-      //Se o usuário foi inserido no DB.
+    //Chamar um método para ver se o usuário existe no banco e pegar esse usúario.
+    this.userService.getUser(this.user).subscribe((res) => {
+      //Se o usuário existe no DB
       if (res.username == this.user.username) {
-        this.mainSwal.title = 'Tudo certo!';
-        this.mainSwal.text = `Usuário ${res.username} criado com sucesso!`;
-        this.mainSwal.icon = 'success';
-        this.mainSwal.iconColor = 'green';
-
-        this.mainSwal.fire();
-
-        //REsolver oproblema do password. Isso não vai resolver o problema.
-        // const password = res.password.replace('.', '');
-        // console.log(atob(res.password));
-        // console.log(this.user);
-
-        //Faz o login salvando o usuário no localstorage do navegador.
-        this.userLogin(this.user);
+        this.userLogin(res);
 
         //Vai para a página de tasks
         this.router.navigate(['/task']);
+
+        console.log(res);
       } else {
         this.mainSwal.title = 'Algo errado!';
         this.mainSwal.text = res.toString();
@@ -87,23 +79,19 @@ export class UserComponent implements OnInit {
         this.mainSwal.iconColor = '#f26419ff';
 
         this.mainSwal.fire();
-        console.log(res);
       }
     });
   }
 
-  userLogin(signUser: User) {
+  userLogin(userLoged: User) {
     //manda as credenciais para o localstorage;
-    this.sessionStorageService.set('username', signUser.username);
-    // this.sessionStorageService.set('password', signUser.password);
-    this.sessionStorageService.set('password', signUser.password);
+    this.sessionStorageService.set('username', userLoged.username);
+    this.sessionStorageService.set('password', userLoged.password);
     this.sessionStorageService.set(
       'name',
-      signUser.name != null ? signUser.name : ''
+      userLoged.name != null ? userLoged.name : ''
     );
   }
 
-  ngOnInit() {
-    // this.userService.addUser(this.user).subscribe((res) => console.log(res));
-  }
+  ngOnInit() {}
 }

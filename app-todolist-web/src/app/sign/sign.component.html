@@ -1,42 +1,46 @@
 <div class="container">
       <main>
-            <h2>LOGIN</h2>
+            <h2 class="sign">Sign</h2>
 
             <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm">
                   <div class="form-group">
-                        <label for="username">Usuário</label>
+                        <label class="username">Usuário</label>
                         <input type="text" class="form-control" required id="username" name="username"
                               [(ngModel)]="user.username" #username="ngModel" />
+
                         <!-- Tratamento de erro -->
                         <div class="form-error" [hidden]="username.valid || username.pristine">
                               Nome de usuário necessário!
                         </div>
-
-                        <!-- <swal #testeSwal [swalVisible]="username.invalid == true && username.dirty == true"
-                              title="Usuário não preenchido!" text="">
-                        </swal> -->
                   </div>
 
-
                   <div class="form-group">
-                        <label for="password">Senha</label>
+                        <label class="password">Senha</label>
                         <input type="password" class="form-control" required id="password" name="password"
                               [(ngModel)]="user.password" #password="ngModel" />
+
                         <!-- Tratamento de erro -->
                         <div class="form-error" [hidden]="password.valid || password.pristine">
                               Uma senha é necessário!
                         </div>
-
                   </div>
 
-                  <button type="submit">ENTRAR</button>
+                  <div class="form-group">
+                        <label class="name">Nome</label>
+                        <input type="name" class="form-control" required id="name" name="name" [(ngModel)]="user.name"
+                              #name="ngModel" />
+
+                        <!-- Tratamento de erro -->
+                        <div class="form-error" [hidden]="name.valid || name.pristine">
+                              Informe seu nome!
+                        </div>
+                  </div>
+
+                  <button type="submit">SALVAR</button>
             </form>
 
-            <a routerLink="/sign">Cadastre-se</a>
+            <a routerLink="/user">Voltar para Home</a>
       </main>
-
-
-      <!-- <a routerLink="/task">Tasks</a> -->
 </div>
 
 <!-- Main alert -->

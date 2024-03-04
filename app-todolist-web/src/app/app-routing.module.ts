@@ -4,11 +4,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { TaskComponent } from './task/task.component';
 import { UserComponent } from './user/user.component';
+import { SignComponent } from './sign/sign.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/user', pathMatch: 'full' },
   { path: 'user', component: UserComponent },
   { path: 'task', component: TaskComponent },
+  { path: 'sign', component: SignComponent },
   // { path: '**', component: PageNotFoundComponent },
   // { path: 'user', component: UserComponent, outlet: 'userRoute' },
   // { path: 'task', component: TaskComponent, outlet: 'taskRoute' },

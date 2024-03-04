@@ -1,5 +1,5 @@
 import { Component, OnInit, Self } from '@angular/core';
-import { BROWSER_STORAGE, StorageService } from './storage.service';
+import { BROWSER_STORAGE, StorageService } from './service/storage.service';
 
 @Component({
   selector: 'app-root',

@@ -35,7 +35,6 @@ public class UserServcice {
             userModel.setPassword(passwordHashed);
             userModel.setCreatedAt(LocalDateTime.now());
 
-
             userRepository.save(userModel);
 
             // UserDTO userDTO = new UserDTO(userModel);
@@ -44,13 +43,27 @@ public class UserServcice {
       }
 
       public UserModel login(UserModel userModel) {
-            var user = this.userRepository.findByUsername(userModel.getUsername());
+            UserModel userLoged = this.userRepository.findByUsername(userModel.getUsername());
 
-            if (user == null) {
-                  throw new UserException("Usuário ou senha estão incorretos!");
+            if (userLoged == null) {
+                  throw new UserException("Usuário não existe!");
             }
 
-            return user;
+            var passwordVerified = BCrypt.verifyer().verify(userModel.getPassword().toCharArray(),
+                        userLoged.getPassword());
+
+            // System.out.println(passwordVerified);
+
+            if (passwordVerified.verified == false) {
+                  throw new UserException("Senha incorreta!");
+            }
+
+            userModel.setName(userLoged.getName());
+            userModel.setCreatedAt(userLoged.getCreatedAt());
+            userModel.setId(userLoged.getId());
+
+            return userModel;
+
       }
 
 }

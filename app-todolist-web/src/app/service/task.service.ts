@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, of, take } from 'rxjs';
 
-import { Task } from './task';
-import { User } from './user';
+import { Task } from '../types/task';
+import { User } from '../types/user';
 
 @Injectable({
   providedIn: 'root',

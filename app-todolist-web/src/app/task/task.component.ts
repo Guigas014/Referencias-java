@@ -7,14 +7,14 @@ import {
   LOCALE_ID,
   ViewChild,
 } from '@angular/core';
-import { BROWSER_STORAGE, StorageService } from '../storage.service';
+import { BROWSER_STORAGE, StorageService } from '../service/storage.service';
 import { Location, formatDate } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
-import { TaskService } from '../task.service';
-import { Task } from '../task';
+import { TaskService } from '../service/task.service';
+import { Task } from '../types/task';
 
 @Component({
   selector: 'app-task',
@@ -62,11 +62,12 @@ export class TaskComponent implements OnInit {
     //Busca o usuário no localstorage e cria o token: 'Guigas014:123456'
     const signUsername = this.sessionStorageService.get('username');
     const signPassword = this.sessionStorageService.get('password');
-    this.name = this.name || '';
+    // this.name = this.name || '';
     // this.token = signUsername + ':' + signPassword;
     this.token = `${signUsername}:${signPassword}`;
   }
 
+  //Atualiza o nome de usuário
   onSubmit(name: string) {
     this.getToken();
 
@@ -270,6 +271,9 @@ export class TaskComponent implements OnInit {
       this.locale
     );
 
+    //Apaga o id da task
+    this.task.id = undefined;
+
     // console.log(today);
     // Limpa os campos do formulário
     this.task.description = '';
@@ -342,8 +346,7 @@ export class TaskComponent implements OnInit {
     @Self() private sessionStorageService: StorageService,
     @SkipSelf() private localStorageService: StorageService,
     private router: Router,
-    @Inject(LOCALE_ID) public locale: string,
-    private location: Location
+    @Inject(LOCALE_ID) public locale: string // private location: Location
   ) {}
 
   ngOnInit() {
