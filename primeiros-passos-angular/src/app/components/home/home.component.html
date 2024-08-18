@@ -1,0 +1,26 @@
+<app-footer></app-footer>
+
+<!-- Interpolação -->
+{{name}}
+{{ name + cont() }}
+
+<!-- Propert Biding -->
+<!-- <img [src]="catURL" /> -->
+
+<!-- Event Bingind -->
+<button (click)="teste()">Click on me!</button>
+
+<!-- Diretivas -->
+@if (value) {
+<h2>Valor é true!</h2>
+}
+
+@for (item of lista; track item) {
+<p>{{ item }}</p>
+} @empty {
+<p>A lista está vazia!</p>
+}
+
+@for (cat of catFacts; track cat) {
+<p>{{ cat.text }}</p>
+}

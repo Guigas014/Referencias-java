@@ -15,8 +15,8 @@
   import org.openqa.selenium.Rectangle;
   import org.openqa.selenium.WebElement;
   import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.springframework.stereotype.Service;
+  import org.openqa.selenium.firefox.FirefoxOptions;
+  import org.springframework.stereotype.Service;
 
 
 @Service
